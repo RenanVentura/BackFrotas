@@ -25,6 +25,28 @@ app.post('/solicitacao', async (req, res) => {
     res.status(201).json(req.body)
 })
 
+app.put('/solicitacao/:id', async (req, res) => {
+
+    await prisma.solicitacao.update({
+        where :{
+            id: req.params.id
+        },
+         data: {
+            Solicitante: req.body.Solicitante,
+            Filial: req.body.Filial,
+            TipoServ: req.body.TipoServ,
+            Servico: req.body.Servico,
+            Equipamento: req.body.Equipamento,
+            Urgencia: req.body.Urgencia,
+            Descricao: req.body.Descricao,
+            DataSolicitacao: req.body.DataSolicitacao,
+            DataEmissao: req.body.DataEmissao
+        }
+    })
+
+    res.status(201).json(req.body)
+})
+
 
 app.get('/solicitacao', async (req, res) => {
     

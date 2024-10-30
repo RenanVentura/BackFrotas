@@ -6,8 +6,6 @@ const prisma = new PrismaClient()
 const app = express();
 app.use(express.json());
 
-const solicitacao = []
-
 app.post('/solicitacao', async (req, res) => {
 
     await prisma.solicitacao.create({
@@ -28,8 +26,11 @@ app.post('/solicitacao', async (req, res) => {
 })
 
 
-app.get('/solicitacao', (req, res) => {
-    res.status(200).json(solicitacao)
+app.get('/solicitacao', async (req, res) => {
+    
+    const lista = await prisma.solicitacao.findMany()
+    
+    res.status(200).json(lista)
 })
 
 app.listen(3000);

@@ -55,4 +55,13 @@ app.get('/solicitacao', async (req, res) => {
     res.status(200).json(lista)
 })
 
+app.delete('solicitacao/:id', async (req, res) => {
+    await prisma.solicitacao.delete({
+        where: { 
+            id: req.params.id
+        }
+    })
+      res.status(200).json({message: "Usuário deletado com sucesso!"})
+})
+
 app.listen(3000);

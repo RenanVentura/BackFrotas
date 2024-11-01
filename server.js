@@ -9,7 +9,7 @@ app.use(express.json());
 
 // Configuração de CORS
 app.use(cors({
-    origin: 'http://localhost:5174',
+    origin: 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
@@ -25,7 +25,9 @@ app.post('/solicitacao', async (req, res) => {
             Urgencia: req.body.Urgencia,
             Descricao: req.body.Descricao,
             DataSolicitacao: req.body.DataSolicitacao,
-            DataEmissao: req.body.DataEmissao
+            DataEmissao: req.body.DataEmissao,
+            Estado: req.body.Estado,
+            DataEncerrado: req.body.DataEncerrado
         }
     });
 
@@ -46,7 +48,9 @@ app.put('/solicitacao/:id', async (req, res) => {
             Urgencia: req.body.Urgencia,
             Descricao: req.body.Descricao,
             DataSolicitacao: req.body.DataSolicitacao,
-            DataEmissao: req.body.DataEmissao
+            DataEmissao: req.body.DataEmissao,
+            Estado: req.body.Estado,
+            DataEncerrado: req.body.DataEncerrado
         }
     });
 

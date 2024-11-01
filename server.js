@@ -1,21 +1,20 @@
-import express from 'express'
-import cors from 'cors'
-import { PrismaClient } from '@prisma/client'
+import express from 'express';
+import cors from 'cors';
+import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 const app = express();
 app.use(express.json());
-app.use(cors());
 
+// Configuração de CORS
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'http://localhost:5174',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 app.post('/solicitacao', async (req, res) => {
-
     await prisma.solicitacao.create({
         data: {
             Solicitante: req.body.Solicitante,
@@ -28,18 +27,17 @@ app.post('/solicitacao', async (req, res) => {
             DataSolicitacao: req.body.DataSolicitacao,
             DataEmissao: req.body.DataEmissao
         }
-    })
+    });
 
-    res.status(201).json(req.body)
-})
+    res.status(201).json(req.body);
+});
 
 app.put('/solicitacao/:id', async (req, res) => {
-
     await prisma.solicitacao.update({
-        where :{
+        where: {
             id: req.params.id
         },
-         data: {
+        data: {
             Solicitante: req.body.Solicitante,
             Filial: req.body.Filial,
             TipoServ: req.body.TipoServ,
@@ -50,26 +48,25 @@ app.put('/solicitacao/:id', async (req, res) => {
             DataSolicitacao: req.body.DataSolicitacao,
             DataEmissao: req.body.DataEmissao
         }
-    })
+    });
 
-    res.status(201).json(req.body)
-})
-
+    res.status(201).json(req.body);
+});
 
 app.get('/solicitacao', async (req, res) => {
-    
-    const lista = await prisma.solicitacao.findMany()
-    
-    res.status(200).json(lista)
-})
+    const lista = await prisma.solicitacao.findMany();
+    res.status(200).json(lista);
+});
 
 app.delete('/solicitacao/:id', async (req, res) => {
     await prisma.solicitacao.delete({
-        where: { 
+        where: {
             id: req.params.id
         }
-    })
-      res.status(200).json({message: "Usuário deletado com sucesso!"})
-})
+    });
+    res.status(200).json({ message: "Usuário deletado com sucesso!" });
+});
 
-app.listen(3000);
+app.listen(3000, () => {
+    console.log('Servidor rodando na porta 3000');
+});

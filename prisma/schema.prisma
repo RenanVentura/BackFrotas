@@ -24,4 +24,6 @@ model Solicitacao {
   Descricao       String
   DataSolicitacao String
   DataEmissao     String
+  Estado          String
+  DataEncerrado   String
 }

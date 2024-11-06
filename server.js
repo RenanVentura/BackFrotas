@@ -22,30 +22,42 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
+// Função para tratar erros
+function handleError(error, res) {
+    console.error("Erro:", error);
+    res.status(500).json({ message: "Erro interno no servidor.", error: error.message, stack: error.stack });
+}
+
 // Rota para criação de uma solicitação
 app.post('/solicitacao', async (req, res) => {
     try {
         console.log('Criando uma nova solicitação...');
+        const { Solicitante, Filial, TipoServ, Servico, Equipamento, Urgencia, Descricao, DataSolicitacao, DataEmissao, Estado, DataEncerrado } = req.body;
+
+        // Validação básica dos dados
+        if (!Solicitante || !Filial || !TipoServ || !Servico) {
+            return res.status(400).json({ message: "Dados faltando na solicitação." });
+        }
+
         const novaSolicitacao = await prisma.solicitacao.create({
             data: {
-                Solicitante: req.body.Solicitante,
-                Filial: req.body.Filial,
-                TipoServ: req.body.TipoServ,
-                Servico: req.body.Servico,
-                Equipamento: req.body.Equipamento,
-                Urgencia: req.body.Urgencia,
-                Descricao: req.body.Descricao,
-                DataSolicitacao: req.body.DataSolicitacao,
-                DataEmissao: req.body.DataEmissao,
-                Estado: req.body.Estado,
-                DataEncerrado: req.body.DataEncerrado
+                Solicitante,
+                Filial,
+                TipoServ,
+                Servico,
+                Equipamento,
+                Urgencia,
+                Descricao,
+                DataSolicitacao,
+                DataEmissao,
+                Estado,
+                DataEncerrado
             }
         });
         console.log('Solicitação criada:', novaSolicitacao);
         res.status(201).json(novaSolicitacao);
     } catch (error) {
-        console.error("Erro ao criar solicitação:", error);
-        res.status(500).json({ message: "Erro interno no servidor.", error: error.message, stack: error.stack });
+        handleError(error, res);
     }
 });
 
@@ -56,25 +68,12 @@ app.put('/solicitacao/:id', async (req, res) => {
         console.log(`Atualizando solicitação com ID: ${id}`);
         const solicitacaoAtualizada = await prisma.solicitacao.update({
             where: { id },
-            data: {
-                Solicitante: req.body.Solicitante,
-                Filial: req.body.Filial,
-                TipoServ: req.body.TipoServ,
-                Servico: req.body.Servico,
-                Equipamento: req.body.Equipamento,
-                Urgencia: req.body.Urgencia,
-                Descricao: req.body.Descricao,
-                DataSolicitacao: req.body.DataSolicitacao,
-                DataEmissao: req.body.DataEmissao,
-                Estado: req.body.Estado,
-                DataEncerrado: req.body.DataEncerrado
-            }
+            data: req.body
         });
         console.log('Solicitação atualizada:', solicitacaoAtualizada);
         res.status(200).json(solicitacaoAtualizada);
     } catch (error) {
-        console.error("Erro ao atualizar a solicitação:", error);
-        res.status(500).json({ message: "Erro interno no servidor.", error: error.message, stack: error.stack });
+        handleError(error, res);
     }
 });
 
@@ -86,8 +85,7 @@ app.get('/solicitacao', async (req, res) => {
         console.log('Solicitações encontradas:', listaSolicitacoes);
         res.status(200).json(listaSolicitacoes);
     } catch (error) {
-        console.error("Erro ao obter solicitações:", error);
-        res.status(500).json({ message: "Erro interno no servidor.", error: error.message, stack: error.stack });
+        handleError(error, res);
     }
 });
 
@@ -111,12 +109,18 @@ app.delete('/solicitacao/:id', async (req, res) => {
         console.log(`Solicitação com ID: ${id} deletada.`);
         res.status(200).json({ message: "Solicitação deletada com sucesso!" });
     } catch (error) {
-        console.error("Erro ao deletar a solicitação:", error);
-        res.status(500).json({ message: "Erro interno no servidor.", error: error.message, stack: error.stack });
+        handleError(error, res);
     }
 });
 
 // Inicializa o servidor na porta 3000
-app.listen(3000, () => {
-    console.log('Servidor rodando na porta 3000');
+app.listen(3000, async () => {
+    try {
+        // Verificando se o Prisma está conectado
+        await prisma.$connect();
+        console.log('Servidor rodando na porta 3000');
+    } catch (error) {
+        console.error('Erro ao conectar ao banco de dados:', error);
+        process.exit(1); // Encerra o servidor se a conexão com o banco falhar
+    }
 });

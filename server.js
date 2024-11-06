@@ -2,11 +2,11 @@ import express from 'express';
 import cors from 'cors';
 import { PrismaClient } from '@prisma/client';
 
-// Inicializando Prisma
 const prisma = new PrismaClient();
-
-// Criando o app Express
 const app = express();
+
+// Configuração do middleware JSON e CORS
+app.use(express.json());
 
 // Configurações de CORS
 const allowedOrigins = ['https://frotasqually.vercel.app', 'https://frotasqually.vercel.app/solicitacao'];
@@ -15,7 +15,6 @@ app.use(cors({
         if (allowedOrigins.includes(origin) || !origin) {
             callback(null, true);
         } else {
-            console.error(`CORS não permitido para o domínio: ${origin}`);
             callback(new Error('Not allowed by CORS'));
         }
     },
@@ -23,13 +22,10 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-// Usando JSON no corpo das requisições
-app.use(express.json());
-
 // Rota para criação de uma solicitação
 app.post('/solicitacao', async (req, res) => {
-    console.log('Recebendo dados para criar uma solicitação:', req.body);
     try {
+        console.log('Criando uma nova solicitação...');
         const novaSolicitacao = await prisma.solicitacao.create({
             data: {
                 Solicitante: req.body.Solicitante,
@@ -45,21 +41,21 @@ app.post('/solicitacao', async (req, res) => {
                 DataEncerrado: req.body.DataEncerrado
             }
         });
-        console.log('Solicitação criada com sucesso:', novaSolicitacao);
+        console.log('Solicitação criada:', novaSolicitacao);
         res.status(201).json(novaSolicitacao);
     } catch (error) {
         console.error("Erro ao criar solicitação:", error);
-        res.status(500).json({ message: "Erro interno no servidor.", error: error.message });
+        res.status(500).json({ message: "Erro interno no servidor.", error: error.message, stack: error.stack });
     }
 });
 
 // Rota para atualização de uma solicitação existente
 app.put('/solicitacao/:id', async (req, res) => {
     const { id } = req.params;
-    console.log(`Atualizando solicitação com ID: ${id}`, req.body);
     try {
+        console.log(`Atualizando solicitação com ID: ${id}`);
         const solicitacaoAtualizada = await prisma.solicitacao.update({
-            where: { id: Number(id) },
+            where: { id },
             data: {
                 Solicitante: req.body.Solicitante,
                 Filial: req.body.Filial,
@@ -78,51 +74,49 @@ app.put('/solicitacao/:id', async (req, res) => {
         res.status(200).json(solicitacaoAtualizada);
     } catch (error) {
         console.error("Erro ao atualizar a solicitação:", error);
-        res.status(500).json({ message: "Erro interno no servidor.", error: error.message });
+        res.status(500).json({ message: "Erro interno no servidor.", error: error.message, stack: error.stack });
     }
 });
 
 // Rota para obter todas as solicitações
 app.get('/solicitacao', async (req, res) => {
-    console.log('Buscando todas as solicitações...');
     try {
+        console.log('Buscando todas as solicitações...');
         const listaSolicitacoes = await prisma.solicitacao.findMany();
         console.log('Solicitações encontradas:', listaSolicitacoes);
         res.status(200).json(listaSolicitacoes);
     } catch (error) {
         console.error("Erro ao obter solicitações:", error);
-        res.status(500).json({ message: "Erro interno no servidor.", error: error.message });
+        res.status(500).json({ message: "Erro interno no servidor.", error: error.message, stack: error.stack });
     }
 });
 
 // Rota para deletar uma solicitação
 app.delete('/solicitacao/:id', async (req, res) => {
     const { id } = req.params;
-    console.log(`Deletando solicitação com ID: ${id}`);
     try {
+        console.log(`Deletando solicitação com ID: ${id}`);
         const solicitacao = await prisma.solicitacao.findUnique({
-            where: { id: Number(id) }
+            where: { id }
         });
 
         if (!solicitacao) {
-            console.error(`Solicitação com ID ${id} não encontrada.`);
             return res.status(404).json({ message: "Solicitação não encontrada." });
         }
 
         await prisma.solicitacao.delete({
-            where: { id: Number(id) }
+            where: { id }
         });
 
-        console.log(`Solicitação com ID ${id} deletada com sucesso.`);
+        console.log(`Solicitação com ID: ${id} deletada.`);
         res.status(200).json({ message: "Solicitação deletada com sucesso!" });
     } catch (error) {
         console.error("Erro ao deletar a solicitação:", error);
-        res.status(500).json({ message: "Erro interno no servidor.", error: error.message });
+        res.status(500).json({ message: "Erro interno no servidor.", error: error.message, stack: error.stack });
     }
 });
 
-// Inicializando o servidor na porta 3000
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
+// Inicializa o servidor na porta 3000
+app.listen(3000, () => {
+    console.log('Servidor rodando na porta 3000');
 });

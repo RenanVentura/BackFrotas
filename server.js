@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 
 // Configurações de CORS
-const allowedOrigins = ['https://frotasqually.vercel.app', 'https://frotasqually.vercel.app/solicitacao'];
+const allowedOrigins = ['https://frotasqually.vercel.app'];
 app.use(cors({
     origin: function (origin, callback) {
         if (allowedOrigins.includes(origin) || !origin) {

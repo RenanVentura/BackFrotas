@@ -26,4 +26,6 @@ model Solicitacao {
   DataEmissao     String
   Estado          String
   DataEncerrado   String
+  StatusDelete    Boolean
+  Numero          Int
 }

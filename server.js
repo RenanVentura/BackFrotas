@@ -1,14 +1,17 @@
 import express from 'express';
 import cors from 'cors';
 import { PrismaClient } from '@prisma/client';
-import { env } from '.env'
+import dotenv from 'dotenv';  // Importando o dotenv
+
+dotenv.config();  // Carregando as variáveis de ambiente do arquivo .env
 
 const prisma = new PrismaClient();
 const app = express();
 
-
+// Configuração do middleware JSON e CORS
 app.use(express.json());
 
+// Configurações de CORS
 const allowedOrigins = ['https://frotasqually.vercel.app'];
 app.use(cors({
     origin: function (origin, callback) {
@@ -22,7 +25,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-
+// Rota para criação de uma solicitação
 app.post('/solicitacao', async (req, res) => {
     try {
         console.log('Criando uma nova solicitação...');
@@ -38,9 +41,7 @@ app.post('/solicitacao', async (req, res) => {
                 DataSolicitacao: req.body.DataSolicitacao,
                 DataEmissao: req.body.DataEmissao,
                 Estado: req.body.Estado,
-                DataEncerrado: req.body.DataEncerrado,
-                StatusDelete: req.body.StatusDelete,
-                Numero: req.body.Numero
+                DataEncerrado: req.body.DataEncerrado
             }
         });
         console.log('Solicitação criada:', novaSolicitacao);
@@ -69,9 +70,7 @@ app.put('/solicitacao/:id', async (req, res) => {
                 DataSolicitacao: req.body.DataSolicitacao,
                 DataEmissao: req.body.DataEmissao,
                 Estado: req.body.Estado,
-                DataEncerrado: req.body.DataEncerrado,
-                StatusDelete: req.body.StatusDelete,
-                Numero: req.body.Numero
+                DataEncerrado: req.body.DataEncerrado
             }
         });
         console.log('Solicitação atualizada:', solicitacaoAtualizada);

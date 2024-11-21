@@ -28,5 +28,4 @@ model Solicitacao {
   DataEncerrado   String
   StatusDelete    Boolean
   Numero          Int
-  teste           String
 }

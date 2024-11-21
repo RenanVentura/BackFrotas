@@ -2,13 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import { PrismaClient } from '@prisma/client';
 import { env } from '.env'
-import dotenv from 'dotenv';
-dotenv.config();
 
 const prisma = new PrismaClient();
 const app = express();
 
-const DATABASE_URL = process.env.DATABASE_URL;
 
 app.use(express.json());
 

@@ -41,7 +41,9 @@ app.post('/solicitacao', async (req, res) => {
                 DataSolicitacao: req.body.DataSolicitacao,
                 DataEmissao: req.body.DataEmissao,
                 Estado: req.body.Estado,
-                DataEncerrado: req.body.DataEncerrado
+                DataEncerrado: req.body.DataEncerrado,
+                StatusDelete:req.body.StatusDelete,
+                NumeroDoc:req.body.NumeroDoc
             }
         });
         console.log('Solicitação criada:', novaSolicitacao);
@@ -70,7 +72,9 @@ app.put('/solicitacao/:id', async (req, res) => {
                 DataSolicitacao: req.body.DataSolicitacao,
                 DataEmissao: req.body.DataEmissao,
                 Estado: req.body.Estado,
-                DataEncerrado: req.body.DataEncerrado
+                DataEncerrado: req.body.DataEncerrado,
+                StatusDelete:req.body.StatusDelete,
+                NumeroDoc:req.body.NumeroDoc
             }
         });
         console.log('Solicitação atualizada:', solicitacaoAtualizada);

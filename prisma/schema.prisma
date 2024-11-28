@@ -28,5 +28,5 @@ model Solicitacao {
   DataEncerrado   String
   StatusDelete    Boolean
   NumeroDoc       Int
-  DateAlt         String?
+  DateAlt         String
 }

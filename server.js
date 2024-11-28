@@ -43,7 +43,8 @@ app.post('/solicitacao', async (req, res) => {
                 Estado: req.body.Estado,
                 DataEncerrado: req.body.DataEncerrado,
                 StatusDelete:req.body.StatusDelete,
-                NumeroDoc:req.body.NumeroDoc
+                NumeroDoc:req.body.NumeroDoc,
+                DateAlt:req.body.DateAlt
             }
         });
         console.log('Solicitação criada:', novaSolicitacao);
@@ -74,7 +75,8 @@ app.put('/solicitacao/:id', async (req, res) => {
                 Estado: req.body.Estado,
                 DataEncerrado: req.body.DataEncerrado,
                 StatusDelete:req.body.StatusDelete,
-                NumeroDoc:req.body.NumeroDoc
+                NumeroDoc:req.body.NumeroDoc,
+                DateAlt:req.body.DateAlt
             }
         });
         console.log('Solicitação atualizada:', solicitacaoAtualizada);
